@@ -3,6 +3,7 @@ from django.shortcuts import render
 import cv2
 import numpy as np
 import os
+from .models import VideoLog
 
 # Функция для создания видео с бегущей строкой
 def create_video_opencv(message):
@@ -46,6 +47,7 @@ def create_video_opencv(message):
 
 def index(request, text):
     video_path = create_video_opencv(text)
+    VideoLog.objects.create(text=text)
     response = FileResponse(open(video_path, 'rb'))
     response['Content-Disposition'] = f'attachment; filename="{os.path.basename(video_path)}"'
     return response
